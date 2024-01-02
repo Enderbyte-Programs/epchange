@@ -1,0 +1,33 @@
+!require tar gzip python3 mkdir
+!main build
+!def build
+    echo "Building epchange"
+    set -e
+    if [ ! -d "dist" ]; then
+        rm -rf dist
+    fi
+    mkdir dist
+    cp src/epchange.py dist/epchange
+    chmod +x dist/epchange
+    cp -r src/*.py dist
+    rm dist/epchange.py
+    cp src/epchange-ui.sh dist/epchange-ui
+    chmod +x dist/epchange-ui
+    echo "Finished building"
+!def install:admin
+    echo "Installing"
+    if [ ! -d "dist" ]; then
+        !execute build
+    fi
+    $BIN=/usr/bin
+    $LIB=/usr/lib/epchange
+    mkdir -p $LIB
+    cp dist/epchange $BIN/epchange
+    cp dist/epchange-ui $BIN/epchange-ui
+    cp dist/*.py $LIB
+    tar -xf lib/cursesplus.tar.xz -C $LIB
+    #Extract library
+!def commit:private
+    git add .
+    git commit -m $1
+    git push
