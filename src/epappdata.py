@@ -27,7 +27,7 @@ class AppDataFile:
         self.default = data
         self.data = self.default
     def load(self) -> dict:
-        """Return data from file, else return default"""
+        """Return data from file, else return default. Also loads internal data. MUST BE CALLED!"""
         if not os.path.isfile(self.path):
             return self.default
         else:
